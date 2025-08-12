@@ -1,0 +1,8 @@
+# Rotate for relative angle (radians) from current robot position.  Angles greater than 2 PI will cause the robot to rotate in multiple circles
+float32 angle
+
+# Max rotation speed (positive rad/s), will cap negative angle to negative speed
+float32 max_rotation_speed 0.5
+---
+# Determines if service is a success
+bool success

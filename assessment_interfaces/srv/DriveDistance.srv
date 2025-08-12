@@ -1,0 +1,8 @@
+# Drive a distance (meters) in a straight line
+float32 distance
+
+# Max translation speed (positive m/s), will cap negative distance to negative speed
+float32 max_translation_speed 0.2
+---
+# Determines if service is a success
+bool success

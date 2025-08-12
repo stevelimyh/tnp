@@ -1,0 +1,5 @@
+bool red
+bool blue
+bool green
+---
+sensor_msgs/Image image
