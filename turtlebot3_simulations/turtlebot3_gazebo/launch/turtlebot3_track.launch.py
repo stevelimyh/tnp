@@ -1,20 +1,4 @@
 #!/usr/bin/env python3
-#
-# Copyright 2019 ROBOTIS CO., LTD.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Authors: Joep Tool, Hyungyu Kim
 
 import os
 
@@ -27,6 +11,7 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+    aruco_launch_file_dir = os.path.join(get_package_share_directory('ros2_aruco'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
@@ -37,6 +22,12 @@ def generate_launch_description():
         get_package_share_directory('turtlebot3_gazebo'),
         'worlds',
         'turtlebot3_track.world'
+    )
+
+    ros2_aruco = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(aruco_launch_file_dir, 'aruco_recognition.launch.py')
+        )
     )
 
     gzserver_cmd = IncludeLaunchDescription(
@@ -74,4 +65,5 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
+    ld.add_action(ros2_aruco)
     return ld
