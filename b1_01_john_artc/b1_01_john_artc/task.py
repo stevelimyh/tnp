@@ -25,7 +25,7 @@ class TurtlebotNavigation(Node):
         self.tag_distance = None
         self.tag_angle = None
         self.current_marker = None
-        self.on_service = False
+        self.rotating = False
         self.distance_threshold = 0
         self.max_linear_velocity = 0.22
         self.max_angular_velocity = 1.0
@@ -42,7 +42,7 @@ class TurtlebotNavigation(Node):
 
     # Implement
     def send_rotate_request(self, angle, speed):
-        self.on_service = True
+        self.rotating = True
         request = RotateAngle.Request()
         request.angle = angle
         request.max_rotation_speed = speed
@@ -51,7 +51,6 @@ class TurtlebotNavigation(Node):
 
 
     def tag_callback(self, msg):
-        # self.get_logger().info(f"tag_callback")
         if msg.marker_ids:
             self.current_marker = msg.marker_ids[0]
             self.tag_distance = self.get_tag_distance(msg.poses[0].position.z, msg.poses[0].position.x)
@@ -62,12 +61,12 @@ class TurtlebotNavigation(Node):
             self.tag_angle = None
 
     def drive_callback(self):
-        if self.on_service: # currently turning
+        if self.rotating: # currently turning
             self.get_logger().info("processing rotate_angle service")
             return
 
         # Implement Here
-        if not self.tag_distance or self.current_marker == None or not self.tag_angle: # No aruco tag detected
+        if self.tag_distance == None or self.current_marker == None or self.tag_angle == None: # No aruco tag detected
             return
 
         self.get_logger().info(f"tag_distance: {self.tag_distance}")
@@ -101,7 +100,7 @@ class TurtlebotNavigation(Node):
         try:
             result = future.result()
             self.get_logger().info(f"Rotate service completed: {result}")
-            self.on_service = False
+            self.rotating = False
         except Exception as e:
             self.get_logger().error(f"Rotate service failed: {e}")
 
