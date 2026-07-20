@@ -37,7 +37,7 @@ class TurtlebotNavigation(Node):
         # Implement
         self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         self.timer = self.create_timer(0.1, self.drive_callback, callback_group=self.parallel_cb)
-        self.tag_callback = self.create_subscription(ArucoMarkers, '/aruco_markers', self.tag_callback, 10, callback_group=self.parallel_cb)
+        self.tag_sub = self.create_subscription(ArucoMarkers, '/aruco_markers', self.tag_callback, 10, callback_group=self.parallel_cb)
         self.rotate_client = self.create_client(RotateAngle, '/rotate_angle', callback_group=self.parallel_cb)
 
     # Implement
